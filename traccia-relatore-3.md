@@ -36,7 +36,7 @@ Relatore 3 presenta le **slide 7–9**: container Docker del backend, container 
 
 2. **Build della SPA e server statico**
    - "Durante la build eseguiamo `npm install` e `npm run build` per generare i file statici della Single Page Application."[cite:30]
-   - "Poi copiamos il risultato dentro un'immagine base (ad esempio nginx) che espone il sito sulla porta 80 interna."[cite:30]
+   - "Poi copiamo il risultato dentro un'immagine base (ad esempio nginx) che espone il sito sulla porta 80 interna."[cite:30]
 
 3. **Configurazione VITE_API_URL in docker-compose.yml**
    - "In `docker-compose.yml`, nella sezione frontend, passiamo un build arg `VITE_API_URL` al Dockerfile."[cite:30]
