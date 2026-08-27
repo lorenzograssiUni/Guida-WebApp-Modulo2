@@ -4,8 +4,6 @@
 
 Buongiorno, presentiamo Split Mate, un'applicazione web per la gestione e la divisione delle spese di gruppo. Il progetto nasce nel primo modulo come web application full-stack composta da un frontend React, da un backend ASP.NET Core Web API e da un database SQLite. L'utente può registrare spese sostenute durante una cena, un viaggio o una convivenza e visualizzare il bilancio del gruppo, cioè quanto ogni partecipante deve pagare o ricevere.
 
-Nella slide vediamo un esempio concreto: vengono inserite diverse spese, sostenute da Mario e Luigi, e l'applicazione calcola il bilancio complessivo. Il punto importante non è soltanto salvare una cifra, ma collegare ogni spesa a un gruppo e ai suoi partecipanti, così da ottenere una situazione economica comprensibile e verificabile.
-
 ## Slide 2 — L'Evoluzione (Modulo 2)
 
 Nel secondo modulo il progetto viene fatto evolvere. Non ci limitiamo più a eseguire frontend, backend e database sul computer dello sviluppatore: trasformiamo l'applicazione in un sistema più vicino a un'architettura cloud-native. Questo significa containerizzare i componenti, automatizzare la compilazione e i controlli, e pubblicare frontend e backend su servizi cloud.
