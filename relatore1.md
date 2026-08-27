@@ -10,6 +10,14 @@ Nel secondo modulo il progetto viene fatto evolvere. Non ci limitiamo più a ese
 
 L'obiettivo è quindi passare dal semplice codice all'infrastruttura. Il codice applicativo rimane fondamentale, ma viene affiancato da Docker, Docker Compose, GitHub Actions e servizi cloud. In questo modo l'ambiente di sviluppo può essere riprodotto e il rilascio diventa più affidabile.
 
+## Slide 3 — Il Paradigma Cloud (NIST) Applicato
+
+La slide sul paradigma cloud applica al nostro caso le caratteristiche definite dal NIST. La prima è l'on-demand self-service: il team può creare e configurare risorse tramite il portale del provider senza dover chiedere manualmente al personale di Azure o Vercel di installare ogni componente.
+
+La seconda è l'ampio accesso alla rete. Il frontend su Vercel e le API su Azure vengono raggiunti via Internet, quindi l'applicazione non è legata al computer dello sviluppatore. La terza è il pooling delle risorse: App Service utilizza un'infrastruttura condivisa tra più clienti, mentre l'isolamento dei servizi nasconde la complessità·°hardware all'utente.
+
+La quarta caratteristica è l'elasticità·°rapida. L'architettura è predisposta ad aumentare le risorse o il numero di istanze quando il traffico cresce, anche se nel nostro progetto il dimensionamento dipende dal piano Azure scelto. La quinta è il servizio misurato: il provider monitora l'uso delle risorse e il modello cloud consente di collegare il consumo al costo. In fase progettuale usiamo il piano gratuito Azure Free F1, quindi ottimizziamo le risorse disponibili.
+
 ## Slide 4 — Modelli di Servizio: Multi-Cloud Pubblico
 
 La prima scelta architetturale riguarda la collocazione dei componenti. Il frontend React è una Single Page Application: dopo la build produce file statici JavaScript, CSS e HTML che vengono serviti all'utente. Per questo viene pubblicato su Vercel, piattaforma adatta a frontend moderni e a deployment automatici collegati a GitHub.
@@ -19,14 +27,6 @@ Il backend ASP.NET Core espone API REST. Le API ricevono le richieste del fronte
 Questa distribuzione usa due provider cloud pubblici e per questo viene definita multi-cloud. Non significa duplicare inutilmente l'intero sistema, ma scegliere il servizio più adatto per ogni componente: Vercel per distribuire la SPA e Azure per eseguire le API .NET. Un ulteriore vantaggio è ridurre la dipendenza da un unico fornitore, anche se bisogna gestire con attenzione configurazione, networking e variabili d'ambiente.
 
 Il collegamento tra frontend e backend avviene tramite HTTP e API REST. Il frontend deve sapere a quale indirizzo inviare le richieste; questo indirizzo non può essere sempre localhost, perché localhost indica il computer o il container dal quale parte la richiesta. In produzione l'indirizzo deve essere quello pubblico del backend su Azure.
-
-## Slide 3 — Il Paradigma Cloud (NIST) Applicato
-
-La slide sul paradigma cloud applica al nostro caso le caratteristiche definite dal NIST. La prima è l'on-demand self-service: il team può creare e configurare risorse tramite il portale del provider senza dover chiedere manualmente al personale di Azure o Vercel di installare ogni componente.
-
-La seconda è l'ampio accesso alla rete. Il frontend su Vercel e le API su Azure vengono raggiunti via Internet, quindi l'applicazione non è legata al computer dello sviluppatore. La terza è il pooling delle risorse: App Service utilizza un'infrastruttura condivisa tra più clienti, mentre l'isolamento dei servizi nasconde la complessità·°hardware all'utente.
-
-La quarta caratteristica è l'elasticità·°rapida. L'architettura è predisposta ad aumentare le risorse o il numero di istanze quando il traffico cresce, anche se nel nostro progetto il dimensionamento dipende dal piano Azure scelto. La quinta è il servizio misurato: il provider monitora l'uso delle risorse e il modello cloud consente di collegare il consumo al costo. In fase progettuale usiamo il piano gratuito Azure Free F1, quindi ottimizziamo le risorse disponibili.
 
 ## Slide 5 — Container vs Macchine Virtuali
 
