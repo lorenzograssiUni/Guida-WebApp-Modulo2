@@ -1,33 +1,50 @@
-# Traccia 1 — Introduzione e fondamenti di Split Mate
+# Traccia 1 — Split Mate: scopo, architettura e cloud
 
-## Obiettivo dell'esposizione
-Presentare il problema affrontato da Split Mate, l'idea generale dell'applicazione e i concetti fondamentali di cloud computing sui quali si basa il progetto.
+## Obiettivo
+Presentare Split Mate, il problema che risolve, l'architettura generale e come il cloud è usato nel progetto.
 
 ## 1. Che cos'è·°Split Mate
-Split Mate è un'applicazione web pensata per dividere e gestire le spese condivise. L'esigenza nasce in situazioni come viaggi, convivenze, cene o attività di gruppo: ogni partecipante può sostenere alcune spese e il sistema calcola quanto ciascuno deve pagare o ricevere.
+Split Mate è un'applicazione web per dividere e gestire spese condivise (viaggi, convivenze, cene, attività di gruppo). Ogni utente può registrare spese e il sistema calcola quanto ciascuno deve pagare o ricevere.
 
-L'applicazione separa il frontend, cioè l'interfaccia usata dall'utente, dal backend, che espone le API e contiene la logica applicativa. I dati vengono gestiti da un database. Questa divisione rende il progetto più ordinato e permette di distribuire i componenti su servizi differenti.
+L'applicazione è divisa in:
+- frontend (interfaccia utente);
+- backend (API e logica di gestione spese);
+- database (persistenza dei dati).
 
-## 2. Perché usare il cloud
-Il cloud computing permette di utilizzare risorse informatiche tramite Internet senza dover gestire direttamente tutto l'hardware. Le risorse possono essere calcolo, rete, archiviazione o servizi già configurati.
+Questa separazione permette di distribuire i componenti su servizi diversi.
 
-Nel caso di Split Mate il cloud è utile perché consente di pubblicare il backend e il frontend, renderli raggiungibili dagli utenti e adattare più facilmente l'infrastruttura alle necessità del progetto. Inoltre, servizi gestiti riducono il lavoro necessario per installazione, manutenzione e aggiornamento dei server.
+## 2. Architettura del progetto
+Il backend espone API REST per creare gruppi, aggiungere spese, assegnare partecipanti e calcolare i saldi. Il frontend chiama queste API e mostra i risultati all'utente.
 
-## 3. Definizione NIST
-La definizione NIST descrive il cloud attraverso alcune caratteristiche essenziali:
+Nel repository ci sono:
+- Dockerfile per il backend;
+- Dockerfile per il frontend;
+- file Docker Compose per orchestrare i servizi in locale;
+- workflow GitHub Actions per CI/CD;
+- configurazioni per il deployment su Azure (backend) e Vercel (frontend).
 
-- self-service su richiesta: l'utente può ottenere risorse senza intervento manuale continuo del fornitore;
-- accesso tramite rete: i servizi sono raggiungibili attraverso connessioni di rete e dispositivi diversi;
-- condivisione delle risorse: l'infrastruttura viene utilizzata da più clienti in modo isolato;
-- elasticità·°: le risorse possono aumentare o diminuire in base al carico;
-- servizio misurato: l'utilizzo delle risorse può essere monitorato e contabilizzato.
+## 3. Perché il cloud in Split Mate
+Il cloud è usato per:
+- pubblicare il backend su Azure App Service;
+- pubblicare il frontend su Vercel;
+- rendere l'applicazione raggiungibile da qualsiasi dispositivo;
+- semplificare la gestione dell'infrastruttura (PaaS).
 
-Queste caratteristiche distinguono un vero servizio cloud da un semplice server remoto.
+In Split Mate si usa soprattutto il modello PaaS: Azure App Service gestisce il runtime del backend, Vercel gestisce la distribuzione del frontend.
 
-## 4. Modelli di servizio e deployment
-I principali modelli di servizio sono IaaS, PaaS e SaaS. Con IaaS il provider offre macchine virtuali, rete e storage, lasciando al cliente una maggiore responsabilità. Con PaaS il provider gestisce anche parte dell'ambiente di esecuzione, mentre lo sviluppatore si concentra sul codice. Con SaaS l'utente utilizza direttamente un'applicazione completa.
+## 4. Richiami teorici essenziali (NIST)
+La definizione NIST descrive il cloud con:
+- self-service su richiesta;
+- accesso tramite rete;
+- condivisione delle risorse;
+- elasticità·°;
+- servizio misurato.
 
-Per Split Mate è particolarmente interessante il modello PaaS: Azure App Service può ospitare il backend senza richiedere la gestione manuale di una macchina virtuale, mentre Vercel può pubblicare il frontend.
+Nel progetto queste caratteristiche si vedono nel fatto che:
+- si attivano servizi (App Service, Vercel) senza gestire macchine fisiche;
+- l'app è accessibile via browser;
+- le risorse sono condivise con altri clienti del provider;
+- si può scalare cambiando piano o istanze.
 
 ## Collegamento al relatore successivo
-Dopo aver chiarito lo scopo dell'applicazione e il significato del cloud, il secondo studente approfondirà·°virtualizzazione, container e immagini Docker, che permettono di rendere l'esecuzione più riproducibile.
+Il secondo studente entra nel dettaglio di come backend e frontend sono containerizzati con Docker e come i Dockerfile sono scritti nel progetto.

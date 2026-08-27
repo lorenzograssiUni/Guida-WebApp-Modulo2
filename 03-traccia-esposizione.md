@@ -1,42 +1,56 @@
-# Traccia 3 — Docker Compose, CI/CD e qualità
+# Traccia 3 — Docker Compose e CI/CD in Split Mate
 
-## Obiettivo dell'esposizione
-Descrivere come Split Mate viene eseguito localmente come sistema composto da più servizi e come la pipeline CI/CD verifica e prepara il software in modo automatico.
+## Obiettivo
+Descrivere come Split Mate è eseguito in locale con Docker Compose e come la pipeline CI/CD automatizza build, test e immagini.
 
-## 1. Perché serve l'orchestrazione
-Split Mate non è formato da un solo processo. Frontend, backend e database hanno responsabilità diverse e devono comunicare tramite rete. Avviare ogni componente manualmente richiederebbe molti comandi e aumenterebbe il rischio di usare configurazioni incoerenti.
+## 1. Docker Compose nel progetto
+Split Mate è composto da più servizi:
+- backend;
+- frontend;
+- database.
 
-L'orchestrazione descrive i servizi, le reti, i volumi, le porte e le variabili necessarie per avviare l'ambiente. In questo progetto Docker Compose rappresenta il modo più semplice per coordinare lo stack durante lo sviluppo.
+Il file Docker Compose:
+- definisce i servizi;
+- specifica le immagini o i contesti di build;
+- espone le porte necessarie;
+- configura le variabili d'ambiente;
+- definisce volumi per il database (per non perdere i dati).
 
-## 2. File Docker Compose
-Nel file Compose ogni servizio indica almeno l'immagine o il contesto di build, le porte esposte e le configurazioni necessarie. I servizi possono comunicare usando i nomi definiti nel file invece di indirizzi IP scritti manualmente.
+I servizi comunicano usando i nomi definiti nel file Compose, non indirizzi IP fissi.
 
-Un database deve normalmente usare un volume per conservare i dati anche se il container viene ricreato. Senza un volume, la cancellazione del container può causare la perdita dei dati memorizzati nel suo filesystem temporaneo.
+## 2. Sviluppo vs produzione
+In sviluppo:
+- si usano volumi montati dal filesystem locale per vedere subito le modifiche;
+- i log sono più dettagliati;
+- le porte sono esposte per accesso diretto.
 
-La direttiva `depends_on` può esprimere l'ordine di avvio, ma non garantisce sempre che un servizio sia già pronto ad accettare richieste. Per questo il backend dovrebbe gestire correttamente i tentativi di connessione e, quando possibile, usare healthcheck.
+In produzione:
+- le immagini sono più minimali;
+- i segreti (password, token) sono gestiti dal provider, non nel repository;
+- il logging è controllato e strutturato.
 
-## 3. Sviluppo e produzione
-In sviluppo si privilegiano velocità e facilità·°di debug: si possono montare directory locali, usare log dettagliati e accedere direttamente alle porte. In produzione, invece, sono importanti immagini minimali, segreti esterni, logging controllato, aggiornamenti riproducibili e minori privilegi.
+Questa distinzione evita di portare in produzione configurazioni comode ma insicure.
 
-Questa distinzione evita di portare in produzione configurazioni comode ma insicure, come password nel repository o modalità di debug attive.
+## 3. Pipeline CI/CD con GitHub Actions
+Nel repository c'è·°un workflow GitHub Actions che:
+- parte su push o pull request;
+- fa il checkout del codice;
+- configura gli ambienti necessari (es. Node, Java);
+- installa le dipendenze;
+- esegue lint e test;
+- costruisce le immagini Docker;
+- può pubblicare le immagini su un registry;
+- può avviare il deployment se i test passano.
 
-## 4. Pipeline CI/CD
-CI significa Continuous Integration: a ogni modifica il codice viene costruito e verificato automaticamente. CD indica la consegna o il deployment continuo, cioè la possibilità di pubblicare automaticamente una versione dopo i controlli.
+Questo automatizza la verifica della qualità e la preparazione delle immagini per il deployment.
 
-GitHub Actions definisce workflow eseguiti in risposta a eventi come push e pull request. Una pipeline tipica per Split Mate può:
+## 4. Test e segreti
+I test automatici includono:
+- test unitari (funzioni o componenti isolati);
+- test di integrazione (interazione tra componenti);
+- eventualmente test end-to-end (flussi completi).
 
-- fare il checkout del repository;
-- configurare l'ambiente JavaScript e Java, se entrambi sono presenti;
-- installare le dipendenze;
-- eseguire lint e test;
-- costruire le immagini Docker;
-- pubblicare le immagini in un registry;
-- avviare il deployment dopo i controlli riusciti.
-
-## 5. Test e segreti
-I test automatici sono un controllo di qualità prima del deployment. I test unitari verificano funzioni o componenti isolati; i test di integrazione controllano la collaborazione tra componenti; i test end-to-end simulano flussi completi dell'utente.
-
-Token, password e chiavi API non devono essere scritti nei file YAML o nel codice. GitHub Actions mette a disposizione Secrets e variabili d'ambiente, così la pipeline può usare credenziali senza renderle pubbliche.
+I segreti (token, password, chiavi) non sono nel repository: sono definiti nei Secrets di GitHub Actions e usati come variabili d'ambiente nella pipeline.
 
 ## Collegamento al relatore successivo
-Dopo la parte relativa a esecuzione locale, automazione e qualità, il quarto studente parlerà·°del deployment reale del backend e del frontend e degli aspetti di stato e scalabilità·°.
+Il quarto studente entra nel dettaglio del deployment reale: backend su Azure, frontend su Vercel, gestione dello stato e scalabilità·°.
