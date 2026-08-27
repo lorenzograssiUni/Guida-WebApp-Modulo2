@@ -1,6 +1,6 @@
 # Relatore 2 — Slide 6–8
 
-## Testo da studiare
+## Slide 6 — L'Ecosistema Docker: Multi-Stage Builds
 
 Ora analizziamo come Split Mate viene containerizzato e avviato in locale. Il repository contiene un Dockerfile per il backend, nella cartella `gestione-spese`, e un Dockerfile per il frontend, nella cartella `frontend-gestione-spese`. L'obiettivo è creare immagini leggere, riproducibili e adatte a essere usate sia dallo sviluppatore sia dalla pipeline CI/CD.
 
@@ -16,6 +16,8 @@ Nginx deve essere configurato con il fallback della SPA. Se l'utente naviga vers
 
 Nel processo di build è importante non copiare file inutili. Il `.dockerignore` esclude, per esempio, `node_modules` e altri artefatti locali. Le dipendenze vengono reinstallate dentro l'immagine usando il file di lock del progetto. Così l'immagine contiene solo ciò che serve e il risultato è più riproducibile.
 
+## Slide 7 — Orchestrazione Locale (Docker Compose)
+
 Passiamo alla slide sull'orchestrazione locale. Split Mate è formato da frontend, backend e database SQLite. Docker Compose descrive questi servizi in un unico file e permette di avviarli con il comando `docker compose up --build -d`.
 
 Il frontend è esposto sulla porta 3000, mentre il backend ascolta sulla porta 5207. Le porte servono per rendere i servizi raggiungibili dall'host; all'interno della rete Docker Compose i container comunicano usando i nomi dei servizi. Questo è preferibile rispetto all'uso di indirizzi IP scritti manualmente, perché gli IP dei container possono cambiare.
@@ -25,6 +27,8 @@ Il database utilizzato è SQLite. Poiché·°il database contiene lo stato dell'
 Il volume protegge dalla ricreazione del container, ma non deve essere confuso con un sistema completo di backup. Per un ambiente cloud realmente affidabile servirebbero anche backup e una strategia di ripristino. Inoltre SQLite è adatto a un progetto contenuto, ma presenta limiti quando aumentano concorrenza e numero di istanze; questo sarà importante nella parte sulla scalabilità·°.
 
 Per gestire il ciclo di vita dei servizi usiamo healthcheck e `depends_on`. L'healthcheck, eseguito tramite `curl`, verifica che il backend sia effettivamente pronto a rispondere. `depends_on` stabilisce l'ordine di avvio e, insieme al controllo di salute, evita che il frontend tenti di utilizzare un backend non ancora pronto. È importante distinguere l'ordine di avvio dalla disponibilità reale: un container avviato non è necessariamente un servizio pronto.
+
+## Slide 8 — Cultura DevOps e Flusso di Lavoro Distribuito
 
 L'ultima slide riguarda la cultura DevOps e il flusso di lavoro del team. DevOps non è soltanto uno strumento, ma un modo di collaborare in cui sviluppo, test e rilascio sono collegati. Il framework CALMS riassume Culture, Automation, Lean, Measurement e Sharing.
 

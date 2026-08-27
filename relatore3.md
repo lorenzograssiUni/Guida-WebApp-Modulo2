@@ -1,6 +1,6 @@
 # Relatore 3 — Slide 9–11
 
-## Testo da studiare
+## Slide 9 — Automazione: Continuous Integration (CI)
 
 Dopo aver preparato i container e il flusso Git, vediamo come Split Mate verifica automaticamente il codice. Nel repository sono presenti workflow GitHub Actions, tra cui `.github/workflows/ci.yml`. Il workflow viene attivato da un push o da una Pull Request sul branch `main`.
 
@@ -16,6 +16,8 @@ Questa variabile è essenziale perché il frontend deve conoscere l'indirizzo de
 
 La pipeline è un gate di qualità: se fallisce il restore, la compilazione del backend o la build del frontend, la modifica non dovrebbe essere integrata. In questo modo il branch principale rimane compilabile e il problema viene individuato subito, prima del deployment.
 
+## Slide 10 — Dev/Prod Parity: Validazione Docker Automatica
+
 La slide successiva aggiunge la validazione Docker tramite `.github/workflows/docker.yml`. Qui non ci limitiamo a compilare il codice: costruiamo anche le immagini di test `splitmate-backend:ci` e `splitmate-frontend:ci`. Questo verifica che i Dockerfile siano corretti e che l'applicazione possa essere impacchettata nell'ambiente previsto.
 
 Dopo la costruzione delle immagini viene eseguito `docker compose config --quiet`. Il comando valida la configurazione Docker Compose senza avviare necessariamente tutto lo stack. Controlla quindi che la sintassi e la struttura del file siano corrette e che il deployment non parta da una configurazione non valida.
@@ -23,6 +25,8 @@ Dopo la costruzione delle immagini viene eseguito `docker compose config --quiet
 Questa procedura realizza il principio di dev/prod parity, cioè la riduzione delle differenze tra ambiente di sviluppo, ambiente di test e ambiente di produzione. Non significa che gli ambienti siano identici in ogni dettaglio, ma che usano gli stessi Dockerfile e la stessa descrizione dei servizi. In questo modo possiamo scoprire già nella pipeline errori che altrimenti comparirebbero sul server.
 
 Il collegamento con il principio 12-Factor è la configurazione separata dal codice e la riproducibilità·°del processo. Le variabili d'ambiente, come `VITE_API_URL`, non vengono confuse con il codice applicativo; le dipendenze sono definite dai file di progetto; la build è automatizzata e ripetibile.
+
+## Slide 11 — Architettura di Deployment Multi-Cloud
 
 La slide sul deployment mostra la distribuzione multi-cloud. Il frontend viene pubblicato su Vercel e il backend su Azure App Service. Quando il codice frontend viene aggiornato su GitHub, Vercel riceve il webhook, esegue la build e pubblica la nuova versione della SPA.
 

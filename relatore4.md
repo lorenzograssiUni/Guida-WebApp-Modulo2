@@ -1,6 +1,6 @@
 # Relatore 4 — Slide 12–14
 
-## Testo da studiare
+## Slide 12 — Gestione dello Stato per Architetture Scalabili
 
 Concludiamo analizzando come Split Mate gestisce lo stato e quali sono le prospettive di scalabilità·°dell'architettura. Il backend è progettato come applicazione stateless, cioè non conserva localmente, nella memoria di una singola istanza, le informazioni necessarie a riconoscere l'utente tra una richiesta e l'altra.
 
@@ -12,7 +12,11 @@ Lo stato applicativo di Split Mate non deve essere conservato nella memoria del 
 
 Questa separazione tra calcolo e stato è importante: il backend elabora le richieste, mentre il database conserva i dati. Tuttavia, bisogna essere precisi sui limiti della soluzione. Un volume o un percorso persistente protegge dalla perdita dovuta al riavvio del container, ma non equivale automaticamente a backup, replica o alta disponibilità.
 
-Inoltre SQLite è un database basato su file. È semplice da usare e adeguato per un'applicazione con carico contenuto, ma la concorrenza e l'accesso simultaneo di molte istanze possono diventare un limite. Per questo la slide sulla scalabilità·°distingue scale up e scale out.
+Inoltre SQLite è un database basato su file. È semplice da usare e adeguato per un'applicazione con carico contenuto, ma la concorrenza e l'accesso simultaneo di molte istanze possono diventare un limite.
+
+## Slide 13 — Prospettive di Scalabilità·°: Scale Out vs Scale Up
+
+La slide sulla scalabilità·°distingue scale up e scale out.
 
 Lo scale up, o scalabilità·°verticale, consiste nell'aumentare CPU e RAM dell'istanza Azure App Service esistente. È una soluzione semplice: non richiede di distribuire più copie dell'applicazione. Ha però un limite fisico e di piano, può avere costi maggiori e non elimina il rischio che l'unica istanza diventi indisponibile.
 
@@ -21,6 +25,8 @@ Lo scale out, o scalabilità·°orizzontale, consiste invece nell'aggiungere pi�
 L'architettura stateless di Split Mate rende possibile lo scale out dal punto di vista del backend. Qualunque nodo può verificare il JWT e leggere o aggiornare i dati. Il vero collo di bottiglia, però, è SQLite: più nodi che accedono allo stesso database locale non equivalgono automaticamente a un database distribuito e concorrenziale.
 
 Per abilitare un vero scale out dovremmo migrare SQLite verso un servizio gestito come PostgreSQL o Azure SQL Database. Un database di questo tipo è progettato per gestire accessi concorrenti, connessioni da più istanze e funzionalità di disponibilità e backup più complete. La migrazione richiederebbe anche aggiornare la connection string, applicare le migrazioni dello schema, configurare i segreti e verificare le prestazioni.
+
+## Slide 14 — Il Blueprint Architetturale (Sintesi del Sistema)
 
 La slide finale riassume il blueprint architetturale. Il primo passaggio è lo sviluppo locale: il team modifica frontend, backend e configurazioni Docker. Il secondo è il versionamento con Git: le modifiche vengono salvate nei commit e proposte tramite feature branch e Pull Request.
 
