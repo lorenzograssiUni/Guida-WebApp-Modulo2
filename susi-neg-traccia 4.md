@@ -2,13 +2,11 @@
 
 ## Slide 12 — Gestione dello Stato per Architetture Scalabili
 
-Concludiamo analizzando come Split Mate gestisce lo stato e quali sono le prospettive di scalabilità·°dell'architettura. Il backend è progettato come applicazione stateless, cioè non conserva localmente, nella memoria di una singola istanza, le informazioni necessarie a riconoscere l'utente tra una richiesta e l'altra.
+Concludiamo analizzando come Split Mate gestisce lo stato e quali sono le prospettive di scalabilità dell'architettura. Il backend è progettato come applicazione stateless: non conserva in memoria, all'interno di una singola istanza, le informazioni necessarie a riconoscere l'utente tra una richiesta e l'altra.
 
-L'autenticazione viene gestita tramite token JWT. Dopo l'autenticazione, il client invia il token nelle richieste successive; il backend lo valida ogni volta e ricava da esso l'identità·°e le autorizzazioni dell'utente. Il vantaggio è che ogni richiesta contiene le informazioni necessarie e può essere gestita da qualunque nodo backend.
+Attualmente l'autenticazione non è ancora implementata: il modello dati prevede un'entità Utente con email e password hash, ma non è configurato alcun meccanismo di login (JWT, cookie o Identity). Le richieste al backend sono quindi anonime; eventuali informazioni sull'utente sono gestite solo lato client e non vengono validate dal server. In un'evoluzione futura, introducendo JWT o cookie di sessione, il backend potrebbe validare le credenziali a ogni richiesta e ricavare da esse l'identità e le autorizzazioni dell'utente. Il vantaggio di un approccio basato su token è che ogni richiesta contiene le informazioni necessarie e può essere gestita da qualunque nodo backend, evitando le sticky session.
 
-Questo evita la sticky session. Una sticky session obbligherebbe il load balancer a inviare sempre lo stesso utente alla stessa istanza, perché solo quella istanza conoscerebbe la sua sessione locale. Nel nostro modello non è necessario: se aggiungiamo più nodi backend, ciascuno può validare il JWT e accedere ai dati persistenti.
-
-Lo stato applicativo di Split Mate non deve essere conservato nella memoria del processo. Utenti, gruppi, spese e bilanci vengono salvati nel database SQLite. In Azure il database è allocato nel percorso persistente `C:\home`, così non dipende esclusivamente dal filesystem temporaneo del container.
+Lo stato applicativo di Split Mate non è conservato nella memoria del processo: utenti, gruppi, spese e bilanci vengono salvati nel database SQLite. In Docker il file del database è montato in /app/data/gestionespese.db, mentre in Azure e su Windows viene usato il percorso persistente C:\home\gestionespese.db, in modo da non dipendere dal filesystem temporaneo del container.
 
 Questa separazione tra calcolo e stato è importante: il backend elabora le richieste, mentre il database conserva i dati. Tuttavia, bisogna essere precisi sui limiti della soluzione. Un volume o un percorso persistente protegge dalla perdita dovuta al riavvio del container, ma non equivale automaticamente a backup, replica o alta disponibilità.
 
