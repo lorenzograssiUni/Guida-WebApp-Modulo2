@@ -14,15 +14,18 @@ Inoltre SQLite è un database basato su file. È semplice da usare e adeguato pe
 
 ## Slide 13 — Prospettive di Scalabilità·°: Scale Out vs Scale Up
 
-La slide sulla scalabilità·°distingue scale up e scale out.
+La slide sulla scalabilità distingue scale up e scale out.
 
-Lo scale up, o scalabilità·°verticale, consiste nell'aumentare CPU e RAM dell'istanza Azure App Service esistente. È una soluzione semplice: non richiede di distribuire più copie dell'applicazione. Ha però un limite fisico e di piano, può avere costi maggiori e non elimina il rischio che l'unica istanza diventi indisponibile.
+Lo scale up, o scalabilità verticale, consiste nell'aumentare CPU e RAM dell'istanza Azure App Service esistente. È una soluzione semplice: non richiede di distribuire più copie dell'applicazione. Ha però un limite fisico e di piano, può avere costi maggiori e non elimina il rischio che l'unica istanza diventi indisponibile.
 
-Lo scale out, o scalabilità·°orizzontale, consiste invece nell'aggiungere più istanze del backend dietro un load balancer. Il traffico viene distribuito tra i nodi con algoritmi come Round Robin, che alterna le richieste, oppure Least Connections, che preferisce l'istanza con meno connessioni attive.
+Lo scale out, o scalabilità orizzontale, consiste invece nell'aggiungere più istanze del backend dietro un load balancer. Il traffico viene distribuito tra i nodi con algoritmi come Round Robin, che alterna le richieste, oppure Least Connections, che preferisce l'istanza con meno connessioni attive.
 
-L'architettura stateless di Split Mate rende possibile lo scale out dal punto di vista del backend. Qualunque nodo può verificare il JWT e leggere o aggiornare i dati. Il vero collo di bottiglia, però, è SQLite: più nodi che accedono allo stesso database locale non equivalgono automaticamente a un database distribuito e concorrenziale.
+L'architettura di Split Mate è di fatto stateless dal punto di vista del backend: non c'è sessione in memoria legata a una specifica istanza e tutte le informazioni persistenti (utenti, gruppi, spese, bilanci) sono salvate nel database SQLite. Attualmente non è implementata alcuna autenticazione tramite JWT o cookie, quindi non c'è validazione di token tra le richieste; questo rende teoricamente possibile indirizzare una richiesta a qualunque istanza senza perdere “stato di sessione”.
+
+Il vero collo di bottiglia per uno scale out reale è SQLite: più nodi che accedono allo stesso file di database non equivalgono automaticamente a un database distribuito e concorrenziale. SQLite è adatto a carichi contenuti e a un'architettura con una singola istanza, ma non è progettato per essere condiviso in modo efficiente da molte istanze in parallelo.
 
 Per abilitare un vero scale out dovremmo migrare SQLite verso un servizio gestito come PostgreSQL o Azure SQL Database. Un database di questo tipo è progettato per gestire accessi concorrenti, connessioni da più istanze e funzionalità di disponibilità e backup più complete. La migrazione richiederebbe anche aggiornare la connection string, applicare le migrazioni dello schema, configurare i segreti e verificare le prestazioni.
+
 
 ## Slide 14 — Il Blueprint Architetturale (Sintesi del Sistema)
 
