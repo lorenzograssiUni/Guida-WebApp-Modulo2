@@ -24,8 +24,7 @@ L'architettura di Split Mate è di fatto stateless dal punto di vista del backen
 
 Il vero collo di bottiglia per uno scale out reale è SQLite: più nodi che accedono allo stesso file di database non equivalgono automaticamente a un database distribuito e concorrenziale. SQLite è adatto a carichi contenuti e a un'architettura con una singola istanza, ma non è progettato per essere condiviso in modo efficiente da molte istanze in parallelo.
 
-Per abilitare un vero scale out dovremmo migrare SQLite verso un servizio gestito come PostgreSQL o Azure SQL Database. Un database di questo tipo è progettato per gestire accessi concorrenti, connessioni da più istanze e funzionalità di disponibilità e backup più complete. La migrazione richiederebbe anche aggiornare la connection string, applicare le migrazioni dello schema, configurare i segreti e verificare le prestazioni.
-
+Per abilitare un vero scale out dovremmo migrare SQLite verso un servizio gestito come PostgreSQL o Azure SQL Database. Un database di questo tipo è progettato per gestire accessi concorrenti, connessioni da più istanze e funzionalità di disponibilità e backup più complete. La migrazione richiederebbe anche aggiornare la connection string, applicare le migrazioni dello schema, configurare in modo sicuro le credenziali di accesso (ad esempio tramite i segreti di Azure App Service) e verificare che le prestazioni siano adeguate al carico atteso.
 
 ## Slide 14 — Il Blueprint Architetturale (Sintesi del Sistema)
 
